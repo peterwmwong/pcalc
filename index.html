@@ -1,0 +1,66 @@
+<html>
+<head>
+<script>
+function doCalc(candiesPerEvolve, pokes, candies) {
+  var total_evolves = 0;
+  var total_transfers = 0;
+
+  var evolves, transfers;
+
+  while(pokes > 0 && candies > 0 && ((candies/candiesPerEvolve)|0) > 0){
+    evolves = 0;
+    transfers = 0;
+    while(pokes > 0 && candies > 0 && ((candies/candiesPerEvolve)|0) > 0) {
+      evolves = ((candies/candiesPerEvolve)|0);
+      candies -= (evolves * candiesPerEvolve);
+      candies += evolves; // gained from evolve
+      candies += evolves; // gained from transferin
+      pokes   -= evolves; // transfer and evolve
+      total_evolves += evolves;
+    }
+    if(pokes > 0 && pokes >= (candiesPerEvolve - candies)) {
+      transfers = (candiesPerEvolve - candies);
+      pokes -= transfers;
+      candies += transfers;
+      total_transfers += transfers;
+    }
+  }
+
+  return {total_evolves: total_evolves, total_transfers: total_transfers};
+}
+
+function userSaidCalc() {
+  var results = doCalc(
+    +document.querySelector('#candiesForEvolve').value,
+    +document.querySelector('#pokies').value,
+    +document.querySelector('#candies').value
+  );
+
+    document.querySelector('#result').textContent =
+      "Evolve: " + results.total_evolves + " Transfers: " + results.total_transfers;
+}
+</script>
+</head>
+<body>
+  <div>
+    <label>
+      Candies Per Evolve
+      <input id="candiesForEvolve" value="12"/>
+    </label>
+  </div>
+  <div>
+  <label>
+    Pokies
+    <input id="pokies" value="52" />
+  </label>
+  </div>
+  <div>
+  <label>
+    Candies
+    <input id="candies" value="188" />
+  </label>
+  </div>
+  <button onclick="userSaidCalc()">Calc</button>
+  <div id="result"></div>
+</body>
+</html>
